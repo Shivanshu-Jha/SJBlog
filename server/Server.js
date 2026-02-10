@@ -13,7 +13,11 @@ const app = express();
 await connectDB()
 
 // Middleware setup
-app.use(cors());
+app.use(cors({
+    origin: "https://sj-blog-ten.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
 app.use(express.json());
 
 // Routes
