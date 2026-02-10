@@ -13,6 +13,7 @@ const Login = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
 
     try {
       const { data } = await axios.post('/admin/login', { email, password })
