@@ -13,9 +13,9 @@ const Login = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     try {
-      const { data } = await axios.post('/api/admin/login', { email, password })
+      const { data } = await axios.post('/admin/login', { email, password })
 
       if (data.success) {
         setToken(data.token)
@@ -45,7 +45,7 @@ const Login = () => {
               <label>Email</label>
               <input onChange={e => setEmail(e.target.value)} value={email}
                 type='email' required placeholder='admin@example.com' className='border-b-2 border-gray-300 p-2 outline-none mb-2' />
-                
+
             </div>
             {/* password input */}
             <div className='flex flex-col'>
