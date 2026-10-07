@@ -1,57 +1,150 @@
-# 📝 SJBlogs
+# SJBlog ✍️
 
-SJBlogs is a full-stack blogging platform that empowers users to create, manage, and share blog posts with ease. It features an admin dashboard, secure authentication, and a responsive frontend for readers. Built with React and Express, and backed by MongoDB, it provides a scalable and modern blogging experience.
+A full-stack blogging platform with a public reading experience and an **admin dashboard** to write, publish and manage blogs and comments. It has a React (Vite) frontend and an Express + MongoDB backend, with ImageKit for image uploads and the Gemini API for AI features.
 
-## 🌐 Live Demo
-Check it out here: [sj-blog-ten.vercel.app](https://sj-blog-ten.vercel.app/)
+**🌐 Live Demo:** [sj-blog-ten.vercel.app](https://sj-blog-ten.vercel.app/)
 
-## 📁 Project Structure
+---
 
-SJBlogs/
+## ✨ Features
 
-├── client/           # React frontend  
-├── server/           # Express backend APIs  
-├── models/           # Mongoose models (User, Blog, Comment)  
-├── public/           # Static assets  
-└── .gitignore        # Sensitive file exclusions  
+### Public site
+- 🏠 **Home page** with a header, blog list and newsletter section
+- 📰 **Blog cards and listing** to browse published posts
+- 📄 **Single blog page** with rich-text content
+- 💬 **Comments** on blog posts
+- 📱 **Responsive UI** built with React
+
+### Admin dashboard
+- 🔐 **Admin login** with protected routes (auth middleware on the server)
+- 📊 **Dashboard** with an overview of blogs and comments
+- ➕ **Add blog** with a rich-text editor and image upload
+- 📋 **List and manage blogs** (publish, unpublish, delete)
+- 🗨️ **Comment management** (review and moderate comments)
+- 🤖 **AI assistance with Gemini** <!-- describe exactly what: e.g. generating blog content from a title -->
+- 🖼️ **Image uploads** via Multer, stored and optimized with ImageKit
+
+---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React, Context API, Axios  
-- **Backend:** Node.js, Express  
-- **Database:** MongoDB (Atlas)  
-- **Authentication:** JWT-based login for admin users  
-- **Deployment:** Vercel  
+| Layer | Technologies |
+| --- | --- |
+| Frontend | React, Vite, React Router, Context API, Axios |
+| Backend | Node.js, Express.js |
+| Database | MongoDB with Mongoose |
+| Media | ImageKit, Multer |
+| AI | Google Gemini API |
+| Deployment | Vercel (client and server deployed separately) |
 
-## ⚙️ Features
+---
 
-- ✍️ Create, edit, and delete blog posts  
-- 🔐 Admin authentication with JWT tokens  
-- 💬 Comment management system  
-- 📦 RESTful API integration between frontend and backend  
-- 🧪 Modular codebase for scalability and testing  
-- 🚀 Deployed seamlessly on Vercel  
+## 🏗️ Architecture
 
-## 🚀 Getting Started
+```
+┌───────────────┐    Axios (token)    ┌────────────────────┐
+│  React app    │ ──────────────────► │   Express API      │
+│  Context API  │ ◄────────────────── │   routes → controllers │
+└───────────────┘                     └─────────┬──────────┘
+                                                │ auth middleware protects admin routes
+                       ┌────────────┬───────────┼────────────┐
+                       ▼            ▼           ▼            
+                   MongoDB       ImageKit     Gemini API
+                (Blog, Comment)  (images)     (AI content)
+```
+
+**Request flow:** the user acts in the React UI → Axios calls an Express route → the middleware checks authentication on admin routes → the controller reads or writes MongoDB (uploading images to ImageKit when needed) → the JSON response updates the UI through the app's Context.
+
+---
+
+## 📁 Project Structure
+
+```
+SJBlog/
+├── client/                         # React frontend (Vite)
+│   └── src/
+│       ├── components/             # BlogCard, BlogList, Header, Navbar, Footer, NewsLetter, Loader
+│       │   └── admin/              # Login, Sidebar, BlogTableItem, CommentTableItem
+│       ├── context/AppContext.jsx  # Global state and shared API logic
+│       ├── pages/
+│       │   ├── Home.jsx
+│       │   ├── Blog.jsx
+│       │   └── admin/              # Layout, Dashboard, AddBlog, ListBlog, Comments
+│       ├── assets/
+│       ├── App.jsx
+│       └── main.jsx
+│
+└── server/                         # Express backend
+    ├── configs/                    # db.js, imagekit.js, gemini.js
+    ├── controllers/                # blogController.js, adminController.js
+    ├── middleware/                 # auth.js, multer.js
+    ├── models/                     # Blog.js, Comment.js
+    ├── routes/                     # blogRoutes.js, adminRoutes.js
+    └── server.js                   # Entry point
+```
+
+---
+
+## ⚙️ Getting Started
 
 ### Prerequisites
-- Node.js  
-- MongoDB (local or Atlas cluster)  
-- Vercel (optional for deployment)  
+- Node.js 18+
+- A MongoDB database (local or Atlas)
+- Accounts for ImageKit and Google AI Studio (Gemini)
 
-### Installation
+### 1. Clone the repo
 
 ```bash
-# Clone the repo
 git clone https://github.com/Shivanshu-Jha/SJBlog.git
-cd SJBlog 
+cd SJBlog
+```
 
+### 2. Set up the server
 
-
-# Install dependencies:
+```bash
 cd server
 npm install
+```
 
-cd client
+Create `server/.env`:
+
+```env
+# Names below are examples; make sure they match the ones used in your code
+MONGODB_URI=
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+JWT_SECRET=
+IMAGEKIT_PUBLIC_KEY=
+IMAGEKIT_PRIVATE_KEY=
+IMAGEKIT_URL_ENDPOINT=
+GEMINI_API_KEY=
+```
+
+Start the server:
+
+```bash
+npm run server     # or: npm start
+```
+
+### 3. Set up the client
+
+```bash
+cd ../client
 npm install
+```
+
+Create `client/.env`:
+
+```env
+VITE_BASE_URL=http://localhost:3000
+```
+
+```bash
+npm run dev
+```
+
+
+## 🌍 Deployment
+
+The client and server are deployed as separate Vercel projects, each with its own `vercel.json`. Set the environment variables in Vercel, point `VITE_BASE_URL` at the deployed server, and allow the client's URL in the server's CORS settings.
 
